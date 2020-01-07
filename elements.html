@@ -96,13 +96,31 @@
 											the third dimension from 129 into 1. This output is not the low rank matrix, but the weight in fully connected neural network reveals that the low rank part do influence the final output. 
 											We call this Neural Network structure as SVD-CNN for we use singular value decomposition(SVD) to deal with training data and design network aiming to output low rank matrix.</p>
 										<p>Followings are the metrics of the reconstructed SPECT image. We compute these metrics and compare them with true images' corresponding metrics.We focus on Contrast Recovery(CR),Contrast to Noise Ratio(CNR) 
-											and Residual Error(RE). </p>
+											and Residual Error(RE).We wantCRclose to 1 in order to test whether the estimated counts isclose to real counts,CNRlarger for more contrast comparedto  the  background  andREto  zero  for  there  should  be  nocounts in lung </p>
 										
 									</header>
 									<header>
-										<h2>result</h2>
-										<p> </p>
+										<h2>training result</h2>
+										<p>During training process, we use $20\%$ training data for validation and others for training. The training history can be seen in Fig.\ref{nrmse training and validation}. We trained this neural network for 50 iterations X-axis is training iteration number, 
+											and Y-axis is Mean Squared Error. The blue line represents Mean Squared Error of training data while red one represents validation data's MSE. It reveals that the training goes well and converges at the end of the training. </p>
+										<p>The neural network outputs estimation of scatter projection. To test the accuracy of scatter projection estimation, we compare the estimated projection with true scatter and compute the difference between them. The difference is small as shown in 
+											Fig.\ref{fig:res}(c) and NRMSE of estimated projection is around $7\%$. </p>
+										
+									
+										
 									</header>
+									<header>
+										<h2>testing result</h2>
+										<p>Fig.\ref{liver Reconstruction and NRMSE} illustrates reconstruction result by using different scatter correction method, we list a slice of true activity of liver phantom and compare this image with different scatter correction method including without scatter correction,
+											Monte Carlo scatter correction and CNN scatter correction. We can see that CNN's NRMSE(0.48) is a little bit lower than MC's NRMSE 0.51, which means a better result.</p>
+										<p>Our results are compared with traditional full rank convolu-tion neural network, which inputs total projection, attenuationmap and outputs scatter projection.  Fig.8 shows relationshipbetween original NRMSE(the x-axis) and NRMSE after scat-ter correction(y-axis).
+											The blue line isy=x.  Green pointsand red points are results from Haowei’s network and bluepoints with yellow points are the result of our neural network.There is no big difference in scatter projection estimation intest data</p>
+									</header>
+									<header>
+										<h2>Metric evaluation</h2>
+										<p>We compare the liver's CNR and CR metric for different scatter correction method, and find that CNN can improve CNR and CR compared with MC for different liver insert and background.</p>
+									</header>
+										
 <!-- 									<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
 									<header>
 										<h3>Heading with a Subtitle</h3>

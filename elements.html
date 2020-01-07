@@ -47,7 +47,7 @@
 
 								<!-- Text stuff -->
 									<h2>Abstract</h2>
-									<p><sup>90<sup>Y microsphere radioembolization, a method for diagnosis by image, has a challenge of scatter correction. 
+									<p><sup>90</sup>Y microsphere radioembolization, a method for diagnosis by image, has a challenge of scatter correction. 
 										Monte Carlo takes long time to make scatter correction so that is not practical. Our aim is to lower down the estimation time 
 										while maintain the approximate accuracy level. Deep Convolution Neural Network(DCNN) has been widely used to do supervised 
 										learning and recently it has been used in nuclear medical image reconstruction. Inspecting rank of projection of SPECT image 
@@ -56,7 +56,7 @@
 										after scatter correction. To evaluate our result, we compute Contrast Reconvery (CR), Contrast to Noise Ratio (CNR), Residual Error (RE) 
 										and Normalized Root Mean Square Error (NRMSE) for test data and compare with Monte Carlo's result. We also do clinic experiment. 
 										Compared with MC result, accuracy of scatter estimation can be maintained in approximate the same level while time used in estimation 
-										has been hugely reduced. The implement of CNN makes reconstruction of quantitative <sup>90<sup>Y image practical. </p>
+										has been hugely reduced. The implement of CNN makes reconstruction of quantitative <sup>90</sup>Y image practical. </p>
 <!-- 									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
 									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
 									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>.
@@ -82,29 +82,29 @@
 										<h2>Network and training process</h2>
 										<p>Fig.\ref{train test process} states the training and testing process. First we use SIMIND model to generate primary, total and scatter projection. 
 											Then we do singular value decomposition for scatter projection and do low rank (rank 4) approximation, which will be used as reference data. 
-											It is different from Haowei's work\cite{Haowei2019SPECT/CT}, in which the author use scatter projection from SIMIND without doing SVD. 
+											It is different from Haowei's work, in which the author use scatter projection from SIMIND without doing SVD. 
 											Pre-processing the scatter instead of using Monte Carlo simulation result is for extracting the low rank feature of scatter projection. 
 											In training process, we input total projection and minimize mean squared error between low rank approximated scatter projection and neural network output. 
 											In testing process, we input the total projection of liver phantom or nema phantom and estimate the scatter projection. Using the estimated scatter and total projection, 
 											we apply OSEM algorithm to do reconstruction. </p>
 										<p> Fig.\ref{CNN structure} illustrates the structure of network. The Neural Network is constructed by a low rank part with fully connected layers and a full rank part with CNN layers. 
 											The low rank part take matrices T1 and T2 as input.</p>
-										<p>Suppose $\tilde{T1}$(with size $128\x4$) and $\tilde{T2}$(with size $4\x80$) are the outputs of fully connected neural network(with a dimension reduction eliminating the third dimension, 
-											which is 1), then they are combined by doing product, which results in a low rank output with size $128\x128$. The full rank part of the neural network take total projection T as input
-											(expand dimension to $128\x80\x1$), and outputs full rank matrix(with size $128\x80\x128$) using CNN1. CNN1 is constructed by three 3x3 convolution layers with ReLU as non-linear function. 
+										<p>Suppose &T1tilde(with size $128\x4$) and &T2tilde(with size 4x80) are the outputs of fully connected neural network(with a dimension reduction eliminating the third dimension, 
+											which is 1), then they are combined by doing product, which results in a low rank output with size 128x128. The full rank part of the neural network take total projection T as input
+											(expand dimension to 128x80x1), and outputs full rank matrix(with size 128x80x128) using CNN1. CNN1 is constructed by three 3x3 convolution layers with ReLU as non-linear function. 
 											Combining low rank part output and CNN1 output, we use CNN2 to produce the final output projection. CNN2 also has three 3x3 convolution layers with ReLU as non-linear function but reduce 
 											the third dimension from 129 into 1. This output is not the low rank matrix, but the weight in fully connected neural network reveals that the low rank part do influence the final output. 
 											We call this Neural Network structure as SVD-CNN for we use singular value decomposition(SVD) to deal with training data and design network aiming to output low rank matrix.</p>
 										<p>Followings are the metrics of the reconstructed SPECT image. We compute these metrics and compare them with true images' corresponding metrics.We focus on Contrast Recovery(CR),Contrast to Noise Ratio(CNR) 
-											and Residual Error(RE).We wantCRclose to 1 in order to test whether the estimated counts isclose to real counts,CNRlarger for more contrast comparedto  the  background  andREto  zero  for  there  should  be  nocounts in lung </p>
+											and Residual Error(RE).We wantCRclose to 1 in order to test whether the estimated counts isclose to real counts,CNRlarger for more contrast comparedto the background and RE to zero for there should be nocounts in lung </p>
 										
 									</header>
 									<header>
 										<h2>training result</h2>
-										<p>During training process, we use $20\%$ training data for validation and others for training. The training history can be seen in Fig.\ref{nrmse training and validation}. We trained this neural network for 50 iterations X-axis is training iteration number, 
+										<p>During training process, we use 20% training data for validation and others for training. The training history can be seen in Fig.\ref{nrmse training and validation}. We trained this neural network for 50 iterations X-axis is training iteration number, 
 											and Y-axis is Mean Squared Error. The blue line represents Mean Squared Error of training data while red one represents validation data's MSE. It reveals that the training goes well and converges at the end of the training. </p>
 										<p>The neural network outputs estimation of scatter projection. To test the accuracy of scatter projection estimation, we compare the estimated projection with true scatter and compute the difference between them. The difference is small as shown in 
-											Fig.\ref{fig:res}(c) and NRMSE of estimated projection is around $7\%$. </p>
+											Fig.\ref{fig:res}(c) and NRMSE of estimated projection is around 7%. </p>
 										
 									
 										
@@ -114,7 +114,7 @@
 										<p>Fig.\ref{liver Reconstruction and NRMSE} illustrates reconstruction result by using different scatter correction method, we list a slice of true activity of liver phantom and compare this image with different scatter correction method including without scatter correction,
 											Monte Carlo scatter correction and CNN scatter correction. We can see that CNN's NRMSE(0.48) is a little bit lower than MC's NRMSE 0.51, which means a better result.</p>
 										<p>Our results are compared with traditional full rank convolu-tion neural network, which inputs total projection, attenuationmap and outputs scatter projection.  Fig.8 shows relationshipbetween original NRMSE(the x-axis) and NRMSE after scat-ter correction(y-axis).
-											The blue line isy=x.  Green pointsand red points are results from Haowei’s network and bluepoints with yellow points are the result of our neural network.There is no big difference in scatter projection estimation intest data</p>
+											The blue line is y=x.  Green pointsand red points are results from Haowei’s network and bluepoints with yellow points are the result of our neural network.There is no big difference in scatter projection estimation intest data</p>
 									</header>
 									<header>
 										<h2>Metric evaluation</h2>

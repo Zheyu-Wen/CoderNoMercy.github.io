@@ -71,45 +71,32 @@
 									<header>
 										<h2>Inspiration</h2>
 										<p>Our method is inspired by the low rank feature of scatter projection. To observe this feature, we first do singular value decomposition 
-											for scatter projection and do the scree plot as shown in Fig.\ref{Fig.1}. We store each scatter projection as 2-D matrix. 
+											for scatter projection and do the scree plot as shown below. We store each scatter projection as 2-D matrix. 
 											By shuffling the matrix's column(the green line), row(the yellow line) and shuffle all entries(red one), we can get the corresponding scree plot separately. 
 											We can find that the original scatter projection(before shuffling) has only rank one for only one singular value is greater than the shuffled matrices' singular value,
-											revealing that scatter projection is low rank matrix\cite{dobriban2017factor}. For it has four singular value that much higher than other singluar value. 
+											revealing that scatter projection is low rank matrix. For it has four singular value that much higher than other singluar value. 
 											We can use 4 rank approximation for this scatter projection.
 											<span class="image fit"><img src="images/scree_plot.jpg" alt="" /></span>	
 										</p>
 	
 										
-										<div class="box alt">
-											<div class="row gtr-50 gtr-uniform">
-												<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-
-												<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-
-												<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic04.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-											</div>
-										</div>
-										<hr />
+										
 									</header>
 										
 									<header>
 										<h2>Network and training process</h2>
-										<p>Fig.\ref{train test process} states the training and testing process. First we use SIMIND model to generate primary, total and scatter projection. 
+										<p>The following figure states the training and testing process. First we use SIMIND model to generate primary, total and scatter projection. 
 											Then we do singular value decomposition for scatter projection and do low rank (rank 4) approximation, which will be used as reference data. 
 											It is different from Haowei's work, in which the author use scatter projection from SIMIND without doing SVD. 
 											Pre-processing the scatter instead of using Monte Carlo simulation result is for extracting the low rank feature of scatter projection. 
 											In training process, we input total projection and minimize mean squared error between low rank approximated scatter projection and neural network output. 
 											In testing process, we input the total projection of liver phantom or nema phantom and estimate the scatter projection. Using the estimated scatter and total projection, 
-											we apply OSEM algorithm to do reconstruction. </p>
-										<p> Fig.\ref{CNN structure} illustrates the structure of network. The Neural Network is constructed by a low rank part with fully connected layers and a full rank part with CNN layers. 
-											The low rank part take matrices T1 and T2 as input.</p>
-										<p>Suppose &T1tilde(with size $128\x4$) and &T2tilde(with size 4x80) are the outputs of fully connected neural network(with a dimension reduction eliminating the third dimension, 
+											we apply OSEM algorithm to do reconstruction. 
+										<span class="image fit"><img src="images/Slide1.jpg" alt="" /></span></p>
+										<p> The third figure illustrates the structure of network. The Neural Network is constructed by a low rank part with fully connected layers and a full rank part with CNN layers. 
+											The low rank part take matrices T1 and T2 as input.
+											<span class="image fit"><img src="images/Slide2.jpg" alt="" /></span></p>
+										<p>Suppose T10(with size $128\x4$) and T20(with size 4x80) are the outputs of fully connected neural network(with a dimension reduction eliminating the third dimension, 
 											which is 1), then they are combined by doing product, which results in a low rank output with size 128x128. The full rank part of the neural network take total projection T as input
 											(expand dimension to 128x80x1), and outputs full rank matrix(with size 128x80x128) using CNN1. CNN1 is constructed by three 3x3 convolution layers with ReLU as non-linear function. 
 											Combining low rank part output and CNN1 output, we use CNN2 to produce the final output projection. CNN2 also has three 3x3 convolution layers with ReLU as non-linear function but reduce 
@@ -122,70 +109,126 @@
 									<header>
 										<h2>training result</h2>
 										<p>During training process, we use 20% training data for validation and others for training. The training history can be seen in Fig.\ref{nrmse training and validation}. We trained this neural network for 50 iterations X-axis is training iteration number, 
-											and Y-axis is Mean Squared Error. The blue line represents Mean Squared Error of training data while red one represents validation data's MSE. It reveals that the training goes well and converges at the end of the training. </p>
+											and Y-axis is Mean Squared Error. The blue line represents Normalized Root Mean Squared Error of training data while red one represents validation data's NRMSE. It reveals that the training goes well and converges at the end of the training.
+										<span class="image fit"><img src="images/nrmse_vs_iter.jpg" alt="" /></span></p>
 										<p>The neural network outputs estimation of scatter projection. To test the accuracy of scatter projection estimation, we compare the estimated projection with true scatter and compute the difference between them. The difference is small as shown in 
-											Fig.\ref{fig:res}(c) and NRMSE of estimated projection is around 7%. </p>
+											following figures and NRMSE of estimated projection is around 7%. 
+										<div class="box alt">
+											<div class="row gtr-50 gtr-uniform">
+												<div class="col-4"><span class="image fit"><img src="images/estimated_scatter.jpg" alt="" /></span></div>
+												<div class="col-4"><span class="image fit"><img src="images/true_scatter.jpg" alt="" /></span></div>
+												<div class="col-4"><span class="image fit"><img src="images/diff_for_esti.jpg" alt="" /></span></div>
+												<div class="col-4"><span class="image fit"><img src="images/projection_profile.jpg" alt="" /></span></div>
+											</div>
+										</div>
+										<hr />
+										</p>
 										
 									
 										
 									</header>
 									<header>
 										<h2>testing result</h2>
-										<p>Fig.\ref{liver Reconstruction and NRMSE} illustrates reconstruction result by using different scatter correction method, we list a slice of true activity of liver phantom and compare this image with different scatter correction method including without scatter correction,
-											Monte Carlo scatter correction and CNN scatter correction. We can see that CNN's NRMSE(0.48) is a little bit lower than MC's NRMSE 0.51, which means a better result.</p>
-										<p>Our results are compared with traditional full rank convolu-tion neural network, which inputs total projection, attenuationmap and outputs scatter projection.  Fig.8 shows relationshipbetween original NRMSE(the x-axis) and NRMSE after scat-ter correction(y-axis).
-											The blue line is y=x.  Green pointsand red points are results from Haowei’s network and bluepoints with yellow points are the result of our neural network.There is no big difference in scatter projection estimation intest data</p>
+										<p> We present reconstruction result by using different scatter correction method, we list a slice of true activity of liver phantom and compare this image with different scatter correction method including without scatter correction,
+											Monte Carlo scatter correction and CNN scatter correction. We can see that CNN's NRMSE(0.48) is a little bit lower than MC's NRMSE 0.51, which means a better result.
+										
+										<span class="image fit"><img src="images/liver_recon_comp.jpg" alt="" /></span></p>
+										<p>Our results are compared with traditional full rank convolu-tion neural network, which inputs total projection, attenuationmap and outputs scatter projection.  Figure shows relationship between original NRMSE(the x-axis) and NRMSE after scat-ter correction(y-axis).
+											The blue line is y=x.  Green pointsand red points are results from Haowei’s network and bluepoints with yellow points are the result of our neural network.There is no big difference in scatter projection estimation intest data
+										<span class="image fit"><img src="images/NRMSE_Compar.jpg" alt="" /></span></p>
 									</header>
 									<header>
 										<h2>Metric evaluation</h2>
 										<p>We compare the liver's CNR and CR metric for different scatter correction method, and find that CNN can improve CNR and CR compared with MC for different liver insert and background.</p>
-										<h2>Table</h2>
+										
 
-									<h3>Metric evaluation</h3>
-									<div class="table-wrapper">
-										<table>
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item 1</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item 2</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item 3</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item 4</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item 5</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
+										<h3>Metric evaluation</h3>
+										<div class="table-wrapper">
+											<table>
+												<thead>
+													<tr>
+														<th>CR %</th>
+														<th>w/o sc</th>
+														<th>MC sc</th>
+														<th>svdCNN</th>
+														<th>Haowei sc</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>liver insert 1</td>
+														<td>41</td>
+														<td>72</td>
+														<td>80</td>
+														<td>81</td>
+													</tr>
+													<tr>
+														<td>liver insert 2</td>
+														<td>31</td>
+														<td>64</td>
+														<td>64</td>
+														<td>64</td>
+													</tr>
+													<tr>
+														<td>liver insert 3</td>
+														<td>29</td>
+														<td>71</td>
+														<td>77</td>
+														<td>70</td>
+													</tr>
+												<thead>
+													<tr>
+														<th>CNR %</th>
+														<th>w/o sc</th>
+														<th>MC sc</th>
+														<th>svdCNN</th>
+														<th>Haowei sc</th>
+													</tr>
+												</thead>
+													<tr>
+														<td>liver insert 1</td>
+														<td>11</td>
+														<td>17</td>
+														<td>15</td>
+														<td>15</td>
+													</tr>
+													<tr>
+														<td>liver insert 2</td>
+														<td>10</td>
+														<td>12</td>
+														<td>13</td>
+														<td>12</td>
+													</tr>
+													<tr>
+														<td>liver insert 3</td>
+														<td>6</td>
+														<td>10</td>
+														<td>11</td>
+														<td>11</td>
+													</tr>
+													<tr>
+														<td>Background 1</td>
+														<td>4</td>
+														<td>21</td>
+														<td>71</td>
+														<td>57</td>
+													</tr>
+													<tr>
+														<td>Background 2</td>
+														<td>0</td>
+														<td>0.4</td>
+														<td>1.6</td>
+														<td>2</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td colspan="2"></td>
+														<td>100.00</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
 									</header>
 										
 <!-- 									<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>

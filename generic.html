@@ -58,7 +58,9 @@
 								generator. But we still need to train discriminator to better judge the output of generator. It is the process just like competition between students and teacher. As student gets a better grade,
 								 teacher also becomes more strict. So next we should train the discriminator by input some fake image or other form of signal and the ground truth, and lower the output score(to be more strict) to
 								optimize the discriminator.</p>
-								<p> </p>
+								<p>In this project, our signal form is music. We choose midi file as our training data to make sure the input and output of our neural network is digital signal. From midi file, we extract notes, pitch
+								and chord to compose our training data. First train the discriminator for 1 time and then train generator for 10 times. Repeat this process until the output of discriminator reach Nash Equilibrium, which means
+								the discrinimator can no longer distinguish the fake one and true one from the output of generator.</p>
 							</section>
 
 					</div>
